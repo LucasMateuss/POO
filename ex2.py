@@ -22,15 +22,17 @@ o método possa retornar a string "Olá, primeiroNome".
 
 4. Use o comando print no método hello() para o objeto usuario1 e observe o resultado. """
 
+
 class usuario:
-    primeiroNome = ''
-    ultimoNome = ''
+    primeiroNome = ""
+    ultimoNome = ""
 
     def hello(self):
-        return(f'Olá {self.primeiroNome}')
-    
+        return f"Olá {self.primeiroNome}"
+
+
 usuario1 = usuario()
-usuario1.primeiroNome = 'Jonnie'
-usuario1.ultimoNome = 'Bravo'
+usuario1.primeiroNome = "Jonnie"
+usuario1.ultimoNome = "Bravo"
 
 print(usuario1.hello())

@@ -38,23 +38,25 @@ usuário.
 11. Crie (instancie) outro objeto. Chame-o de usuario2, dê a ele o primeiro nome de “Jane” e o
 sobrenome de “Silva”, e depois diga “Olá” ao usuário. """
 
+
 class usuario:
-    primeiroNome = ''
-    ultimoNome = ''
+    primeiroNome = ""
+    ultimoNome = ""
 
     def hello(self):
-        return('Olá')
-    
+        return "Olá"
+
+
 usuario1 = usuario()
-usuario1.primeiroNome = 'Lucas'
-usuario1.ultimoNome = 'Souza'
+usuario1.primeiroNome = "Lucas"
+usuario1.ultimoNome = "Souza"
 
 print(usuario1.primeiroNome, usuario1.ultimoNome)
 
 print(usuario1.hello(), usuario1.primeiroNome, usuario1.ultimoNome)
 
 usuario2 = usuario()
-usuario2.primeiroNome = 'Jane'
-usuario2.ultimoNome = 'Silva'
+usuario2.primeiroNome = "Jane"
+usuario2.ultimoNome = "Silva"
 
 print(usuario2.hello(), usuario2.primeiroNome, usuario2.ultimoNome)
