@@ -527,9 +527,118 @@ class funcionario:
         self.salario += self.salario * (aumento / 100)
 
     def __str__ (self):
-        return f"Nome: {self.nome} - Salário: {self.salario}"
+        return f"Nome: {self.nome}\nSalário: {self.salario}"
 
-funcionario1 = funcionario('Lucas', 1500)
+funcionario1 = funcionario('Lucas', 1000)
 funcionario1.aumentaSalario(30)
 print(funcionario1)
+    
+""" • Classe Bichinho Virtual++: Melhore o programa do bichinho virtual, permitindo que o usuário
+especifique quanto de comida ele fornece ao bichinho e por quanto tempo ele brinca com o bichinho.
+Faça com que estes valores afetem quão rapidamente os níveis de fome e tédio caem.
+
+• Crie uma "porta escondida" no programa do programa do bichinho virtual que mostre os valores
+exatos dos atributos do objeto. Consiga isto mostrando o objeto quando uma opção secreta, não listada
+no menu, for informada na escolha do usuário. Dica: acrescente um método especial str() à classe
+Bichinho.
+
+• Crie uma Fazenda de Bichinhos instanciando vários objetos bichinho e mantendo o controle deles
+através de uma lista. Imite o funcionamento do programa básico, mas ao invés de exigis que o usuário
+tome conta de um único bichinho, exija que ele tome conta da fazenda inteira. Cada opção do menu
+deveria permitir que o usuário executasse uma ação para todos os bichinhos (alimentar todos os
+bichinhos, brincar com todos os bichinhos, ou ouvir a todos os bichinhos). Para tornar o programa
+mais interessante, dê para cada bichinho um nivel inicial aleatório de fome e tédio. """
+
+class tamagushi():
+    def __init__ (self, nome, fome, saude, idade, tedio):
+        self._nome = nome
+        self._idade = idade
+        self._fome = fome
+        self._saude = saude
+        self._tedio = tedio
         
+
+    @property
+    def nome (self):
+        return self._nome
+
+    @nome.setter
+    def nome (self, novoNome):
+        self._nome = novoNome
+
+    @property
+    def fome (self):
+        return self._fome
+
+    @fome.setter
+    def fome (self, novaFome):
+        self._fome = novaFome
+
+    @property
+    def saude (self):
+        return self._saude
+
+    @saude.setter
+    def saude (self, novaSaude):
+        self._saude = novaSaude
+
+    @property
+    def idade (self):
+        return self._idade
+
+    @idade.setter
+    def idade (self, novaIdade):
+        self._idade = novaIdade
+
+    @property
+    def tedio (self):
+        return self._tedio
+    
+    @tedio.setter
+    def tedio (self, novoTedio):
+        self._tedio = novoTedio
+
+    def calculaHumor (self):
+        return self._saude + self._fome - self.tedio
+
+    def __str__ (self):
+        return f"""
+    \nNome: {self.nome}
+    Fome: {self._fome}
+    Saude: {self._saude}
+    Idade: {self._idade}
+    Tédio: {self._tedio}
+    Humor: {self.calculaHumor()}
+        """
+
+fazendinha = [tamagushi('Shrek', 10, 5, 1, 0), tamagushi('Sheila', 10, 5, 1, 0), tamagushi('Sansão', 10, 5, 1, 0)]
+opcao = 0
+while opcao != 4:
+    opcao = int(input("""
+    \n=-=-=-=-= Cuide do seu Tamagushi =-=-=-=-=
+    [ 1 ] Alimentar
+    [ 2 ] Brincar
+    [ 3 ] Dormir
+    [ 4 ] Sair
+    Sua escolha: """))
+    if opcao == 1:
+        qtd_comida = int(input('\nDigite o tanto de comida que você deseja dar: '))
+        for bichinho in fazendinha:
+            bichinho.fome -= qtd_comida
+            bichinho.saude += qtd_comida
+            bichinho.tedio += 1
+    elif opcao == 2:
+        for bichinho in fazendinha:
+            bichinho.tedio -= 1
+    elif opcao == 3:
+        for bichinho in fazendinha:
+            bichinho.fome += 1
+            bichinho.saude += 1
+            bichinho.idade += 1
+            bichinho.tedio += 1
+    elif opcao == 4:
+        print("Até Mais. Volte Logo!")
+    else:
+        print('Insira uma opção válida')
+    for bichinho in fazendinha:
+        print(bichinho)
