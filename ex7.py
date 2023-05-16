@@ -145,3 +145,92 @@ retangulo1 = retangulo(9, 4, 'Retângulo')
 print(retangulo1.area())
 circulo1 = circulo(5, 'Círculo')
 print(circulo1.area())
+
+
+""" 6. Implemente o Diagrama de Classes de Contas Bancárias ilustrado abaixo. """
+
+class cCorrente():
+    def __init__ (self, numero, saldo, cliente):
+        self._numero = numero
+        self._saldo = saldo
+        self.cliente = cliente
+
+    def creditar(self, valor):
+        self._saldo -= valor
+
+    def debitar(self, valor):
+        self._saldo += valor
+
+    @property
+    def saldo(self):
+        return self._saldo
+    
+
+class cPoupanca(cCorrente):
+    def __init__ (self, numero, saldo, cliente, saldoMinimo):
+        super().__init__ (numero, saldo, cliente)
+        self._saldoMinimo = saldoMinimo
+
+    def debitar(self, valor):
+        super().debitar(valor)
+
+    def atualizar_saldo(self):
+        return self.get_saldo()
+    
+    @property
+    def saldoMinimo(self):
+        return self._saldoMinimo
+    
+
+class cInvestimento(cCorrente):
+    def __init__ (self, numero, saldo, cliente, diaInvestimento, periodo):
+        super().__init__ (self, numero, cliente)
+        self.diaInvestimento = diaInvestimento
+        self.periodo = periodo 
+
+    
+class cEspecial(cCorrente):
+    def __init__ (self, numero, saldo, cliente, limite):
+        super().__init__ (numero, saldo, cliente)
+        self.limite = limite
+
+    def debitar(self, valor):
+        super().debitar(valor)
+        return self._saldo
+    
+cliente1 = cCorrente(1, 1500, 'Lucas')
+cliente2 = cPoupanca(2, 100, 'Mateus', 1000)
+cliente3 = cInvestimento(3, 1500, 'José', '29/09/2022', '2 anos')
+cliente4 = cEspecial(4, 1500, 'Gabriel', 800)
+
+cliente1.debitar(1000)
+cliente1.creditar(800)
+print(f'\n{cliente1.saldo}')
+cliente2.debitar(1000)
+print(f'\n{cliente2.saldo}')
+
+
+
+""" 7. Implemente o Diagrama de Classes de Empregados ilustrado abaixo. """
+class empregado():
+    def __init__ (self, codigo, nome, email, salario):
+        self.codigo = codigo
+        self.nome = nome
+        self.email = email
+        self.salario = salario
+
+    @property
+    def salario(self):
+        return self.salario
+
+    def aumentaSalario (self, percentual):
+        aumento = self.salario * (percentual / 100)  
+        self.salario += aumento
+
+class chefe(empregado):
+    def __init__ (self, codigo, nome, email, salario, beneficio):
+        super().__init__ (codigo, nome, email, salario)
+        self.beneficio = beneficio
+        
+
+    
