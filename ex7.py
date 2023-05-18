@@ -217,20 +217,120 @@ class empregado():
         self.codigo = codigo
         self.nome = nome
         self.email = email
-        self.salario = salario
+        self._salario = salario
 
     @property
     def salario(self):
-        return self.salario
+        return self._salario
 
     def aumentaSalario (self, percentual):
-        aumento = self.salario * (percentual / 100)  
-        self.salario += aumento
+        self._salario += ((self._salario * percentual) / 100)
 
 class chefe(empregado):
     def __init__ (self, codigo, nome, email, salario, beneficio):
         super().__init__ (codigo, nome, email, salario)
         self.beneficio = beneficio
-        
+
+    def aumentaSalario(self, percentual):
+        super().aumentaSalario(percentual) 
+        self._salario += self.beneficio
 
     
+class estagiario(empregado):
+    def __init__ (self, codigo, nome, email, salario, desconto):
+        super().__init__ (codigo, nome, email, salario)
+        self.desconto = desconto
+
+    def aumentaSalario(self, percentual):
+        super().aumentaSalario(percentual) 
+        self._salario -= self.desconto
+
+
+chefe1 = chefe('1', 'Lucas', 'lucas@gmail.com', 5000, 500)
+estagiario1 = estagiario('2', 'Pedro', 'pedro@gmail.com', 1100, 100)
+chefe1.aumentaSalario(10)
+estagiario1.aumentaSalario(20)  
+print(f'\n{chefe1.salario}\n{estagiario1.salario}')
+
+
+""" 8. Implemente o código para as classes abaixo:
+a) crie uma classe chamada Ingresso que possui um valor em reais e um método
+imprimeValor()
+b) crie uma classe VIP que herda de Ingresso e possui um valor adicional. Crie também um método
+que retorne o valor do ingresso VIP (como o adicional incluído).
+c) crie uma classe Normal, que herda Ingresso e possui um método que imprime: "Ingresso Normal".
+d) crie uma classe CamaroteInferior (que possui a localização do ingresso e métodos para acessar e
+imprimir esta localização) e uma classe CamaroteSuperior, que é mais cara (possui valor
+adicional). Esta última possui um método para retornar o valor do ingresso. Ambas as classes herdam
+a classe VIP. """
+
+class ingresso():
+    def __init__ (self, reais):
+        self.reais = reais
+
+    def imprimeValor(self):
+        print(f'Valor do Ingresso: R${self.reais}')
+
+class vip(ingresso):
+    def __init__ (self, reais, valorAdicional):
+        super().__init__ (reais)
+        self.valorAdicional = valorAdicional
+
+    def imprimeValorVip(self):
+        print(f'Valor do Ingresso VIP: R${(self.reais) + (self.valorAdicional)}')
+
+class normal(ingresso):
+    def imprimeIngressoNormal(self):
+        print('Ingresso Normal')
+
+class camaroteInferior(vip):
+    def __init__ (self, localizacao, metodoDeAcesso):
+        self.localizacao = localizacao 
+        self.metodoDeAcesso = metodoDeAcesso
+
+    def imprimeCamaroteInferior(self):
+        print(f'Camarote: A1\nMétodo de Acesso: Porta vermelha')
+
+class camaroteSuperior(vip):
+    def __init__ (self, reais, taxaCamarote, valorAdicional):
+        super().__init__ (reais, valorAdicional)
+        self.taxaCamarote = taxaCamarote
+
+    def imprimeValorCamaroteSuperior(self):
+        print(f'Valor do Camarote Superior: R${(self.reais) + (self.taxaCamarote)}')
+
+
+ingressoNormal = ingresso(30)
+ingressoVip = vip(30, 20)
+ingressoCamaroteSuperior = camaroteSuperior(30, 100, 20)
+
+print(ingressoNormal.imprimeValor())
+print(ingressoVip.imprimeValorVip())
+print(ingressoCamaroteSuperior.imprimeValorCamaroteSuperior())  
+
+
+""" 9. Implemente o código para as classes abaixo:
+a) uma classe Funcionario com os atributos (nome, endereço, telefone, email) e com os
+métodos (construtor, exibeDados())
+b) crie a classe Assistente, que também é Funcionário, e que possui um número de
+matrícula (use o método get).
+c) sabendo que os Assistentes Técnicos possuem um bônus salarial e que os Assistentes Administrativos
+possuem um turno (dia ou noite) e um adicional noturno, crie as classes Tecnico e
+Administrativo. Para cada um destas classes, imprima o número de matrícula e o nome de cada
+um deles. """
+
+class funcionario():
+    def __init__ (self, nome, endereco, telefone, email):
+        self.nome = nome
+        self.endereco = endereco
+        self.telefone = telefone
+        self.email = email
+
+    def exibeDados (self):
+        print(f'\nNome: {self.nome}\nEndereço: {self.endereco}\nTelefone: {self.telefone}\nEmail: {self.email}')
+
+class assistente(funcionario):
+    def __init__ (self, nome, endereco, telefone, email, matricula):
+        super().__init__ (nome, endereco, telefone, email)
+        self.matricula = matricula
+
