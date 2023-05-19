@@ -334,3 +334,73 @@ class assistente(funcionario):
         super().__init__ (nome, endereco, telefone, email)
         self.matricula = matricula
 
+class tecnico(assistente):
+    def __init__ (self, nome, endereco, telefone, email, matricula, salario, bonus):
+            super().__init__ (nome, endereco, telefone, email, matricula)
+            self.salario = salario
+            self.bonus = bonus
+
+    def salarioTecnico (self):
+        return self.salario + self.bonus
+
+class administrativo(assistente):
+    def __init__ (self, nome, endereco, telefone, email, matricula, salario, turno, adicional):
+            super().__init__ (nome, endereco, telefone, email, matricula)
+            self.salario = salario
+            self.turno = turno
+            self.adicional = adicional
+
+    def salarioAdministrativo(self):
+        if (self.turno) == 'Noturno' or 'noturno':
+            return self.salario + self.adicional
+        else:
+            return self.salario
+
+assistenteTecnico = tecnico('Lucas', 'Joinville', '47988750246', 'lucas@gmail.com', '12345', 2100, 400)
+assistenteAdministrativo = administrativo('Pedro', 'São Paulo', '11984651238', 'pedro@gmail.com', '67891', 2000, 'noturno', 300)
+print(f'\nNome: {assistenteTecnico.nome}\nEndereço: {assistenteTecnico.endereco}\nTelefone: {assistenteTecnico.telefone}\nEmail: {assistenteTecnico.email}\nMatrícula: {assistenteTecnico.matricula}\nSalário: {assistenteTecnico.salarioTecnico()}')
+print(f'\nNome: {assistenteAdministrativo.nome}\nEndereço: {assistenteAdministrativo.endereco}\nTelefone: {assistenteAdministrativo.telefone}\nEmail: {assistenteAdministrativo.email}\nMatrícula: {assistenteAdministrativo.matricula}\nSalário: {assistenteAdministrativo.salarioAdministrativo()}')
+
+""" 10. Observe o Diagrama de Classes na figura abaixo:
+
+Faça o seguinte:
+a) Crie as classes e métodos conforme o diagrama
+b) Instancie uma pessoa pobre e faça trabalhar
+c) Instancie uma pessoa rica e que faça compras """
+
+class pessoa():
+    def __init__ (self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+
+class rica(pessoa):
+    def __init__ (self, nome, idade, dinheiro):
+        super().__init__ (nome, idade)
+        self.dinheiro = dinheiro
+
+    def fazCompras(self):
+        return('Indo ao Shopping...')
+
+
+class pobre(pessoa):
+    def __init__ (self, nome, idade):
+        super().__init__ (nome, idade)    
+
+    def trabalha(self):
+        return('Indo trabalhar...')
+
+
+class miseravel(pessoa):
+    def __init__ (self, nome, idade):
+        super().__init__ (nome, idade)    
+
+    def mendiga (self):
+        return('Mendigando...')
+
+
+rica1 = rica('Lucas', 19, 50000)
+pobre1 = pobre('José', 19)
+miseravel1 = miseravel('Gabriel', 20)
+
+print(f'\nRico: {rica1.fazCompras()}\nPobre: {pobre1.trabalha()}\nMiserável: {miseravel1.mendiga()}')
+
