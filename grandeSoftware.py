@@ -27,25 +27,13 @@ class wood(Enum):
     ALDER = "alder"
     SITKA = "sitka"
 
-
-class Guitar:
-    def __init__(self, serialNumber, price, builder, model, typeg, backWood, topWood):
-        self.serialNumber = serialNumber
-        self.price = price
+class guitarSpec:
+    def __init__(self, builder, model, typeg, backWood, topWood):
         self.builder = builder
         self.model = model
         self.typeg = typeg
         self.backWood = backWood
         self.topWood = topWood
-
-    def getSerialNumber(self):
-        return self.serialNumber
-
-    def getPrice(self):
-        return self.price
-
-    def setPrice(self, newPrice):
-        self.price = newPrice
 
     def getBuilder(self):
         return self.builder
@@ -61,6 +49,23 @@ class Guitar:
 
     def getTopWood(self):
         return self.topWood
+
+class Guitar:
+    def __init__(self, serialNumber, price, builder, model, typeg, backWood, topWood):
+        self.serialNumber = serialNumber
+        self.price = price
+        self.spec = guitarSpec(builder, model, typeg, backWood, topWood)
+
+
+    def getSerialNumber(self):
+        return self.serialNumber
+
+    def getPrice(self):
+        return self.price
+
+    def setPrice(self, newPrice):
+        self.price = newPrice
+
     
 class inventory:
     def __init__(self):
@@ -79,16 +84,16 @@ class inventory:
 
     def searchGuitar(self, searchGuitar):
         for guitar in self.guitars:
-            if searchGuitar.getBuilder() != guitar.getBuilder():
+            if searchGuitar.spec.getBuilder() != guitar.spec.getBuilder():
                 continue
-            model = searchGuitar.getModel().lower()
-            if model and model != "" and model != guitar.getModel().lower():
+            model = searchGuitar.spec.getModel().lower()
+            if model and model != "" and model != guitar.spec.getModel().lower():
                 continue
-            if searchGuitar.getTypeg() != guitar.getTypeg():
+            if searchGuitar.spec.getTypeg() != guitar.spec.getTypeg():
                 continue
-            if searchGuitar.getBackWood() != guitar.getBackWood():
+            if searchGuitar.spec.getBackWood() != guitar.spec.getBackWood():
                 continue
-            if searchGuitar.getTopWood() != guitar.getTopWood():
+            if searchGuitar.spec.getTopWood() != guitar.spec.getTopWood():
                 continue
             return guitar
         return None
@@ -102,6 +107,6 @@ lucas = Guitar(" ", 0, builder.RYAN,"Stratocastor", typeG.ACOUSTIC, wood.MAPLE, 
 guitar = inventory.searchGuitar(lucas)
 
 if guitar is not None:
-  print(f'Olá, talvez você goste desta: {guitar.getBuilder()} {guitar.getModel()} {guitar.getTypeg()} guitar:\n {guitar.getBackWood()} na traseira e laterais, \n{guitar.getTopWood()} no tampo. \n Ela pode ser sua por apenas R${guitar.getPrice()}')
+  print(f'Olá, talvez você goste desta: {guitar.spec.getBuilder()} {guitar.spec.getModel()} {guitar.spec.getTypeg()} guitar:\n {guitar.spec.getBackWood()} na traseira e laterais, \n{guitar.spec.getTopWood()} no tampo. \n Ela pode ser sua por apenas R${guitar.getPrice()}')
 else:
   print("Desculpe Erin, não temos nada para você")
