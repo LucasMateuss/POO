@@ -7,7 +7,7 @@ class Builder(Enum):
     GIBSON = "gibson"
     COLLINGS = "collings"
     OLSON = "olson"
-    RYAN = "ryan" 
+    RYAN = "ryan"
     PRS = "prs"
     ANY = "any"
 
@@ -29,111 +29,171 @@ class Wood(Enum):
     SITKA = "sitka"
 
 
-class GuitarSpec:
-    def __init__(self, builder, model, typeg, backWood, topWood, numStrings):
+class Style(Enum):
+    A = "a"
+    F = "f"
+
+
+class InstrumentSpec:
+    def __init__(self, builder, model, typeg, backWood, topWood):
         self.builder = builder
         self.model = model
         self.typeg = typeg
         self.backWood = backWood
         self.topWood = topWood
+
+    def matches(self, otherSpec):
+        return (
+            self.builder == otherSpec.builder
+            and self.model.lower() == otherSpec.model.lower()
+            and self.typeg == otherSpec.typeg
+            and self.backWood == otherSpec.backWood
+            and self.topWood == otherSpec.topWood
+        )
+
+
+class GuitarSpec(InstrumentSpec):
+    def __init__(self, builder, model, typeg, backWood, topWood, numStrings):
+        super().__init__(builder, model, typeg, backWood, topWood)
         self.numStrings = numStrings
 
-    def getBuilder(self):
-        return self.builder
-
-    def getTypeG(self):
-        return self.typeg
-
-    def getModel(self):
-        return self.model
-
-    def getBackWood(self):
-        return self.backWood
-
-    def getTopWood(self):
-        return self.topWood
-
-    def getNumStrings(self):    
+    def getNumStrings(self):
         return self.numStrings
 
     def matches(self, otherSpec):
-        if self.builder != otherSpec.getBuilder():
-            return False
-        if self.model and self.model.lower() != otherSpec.getModel().lower():
-            return False
-        if self.typeg != otherSpec.getTypeG():
-            return False
-        if self.backWood != otherSpec.getBackWood():
-            return False
-        if self.topWood != otherSpec.getTopWood():
-            return False
-        if self.numStrings != otherSpec.getNumStrings():
-            return False
-        return True
+        return (
+            super().matches(otherSpec)
+            and self.numStrings == otherSpec.getNumStrings()
+        )
 
 
-class Guitar:
+class MandolinSpec(InstrumentSpec):
+    def __init__(self, builder, model, typeg, backWood, topWood, style):
+        super().__init__(builder, model, typeg, backWood, topWood)
+        self.style = style
+
+    def getStyle(self):
+        return self.style
+
+    def matches(self, otherSpec):
+        return (
+            super().matches(otherSpec)
+            and self.style == otherSpec.getStyle()
+        )
+
+
+class Instrument:
     def __init__(self, serialNumber, price, spec):
         self.serialNumber = serialNumber
         self.price = price
         self.spec = spec
 
-    def getSerialNumber(self):
-        return self.serialNumber
 
-    def getPrice(self):
-        return self.price
+class Guitar(Instrument):
+    def __init__(self, serialNumber, price, spec):
+        super().__init__(serialNumber, price, spec)
 
-    def setPrice(self, newPrice):
-        self.price = newPrice
+
+class Mandolin(Instrument):
+    def __init__(self, serialNumber, price, spec):
+        super().__init__(serialNumber, price, spec)
 
 
 class Inventory:
     def __init__(self):
-        self.guitars = []
+        self.inventory = []
 
-    def addGuitar(self, serialNumber, price, spec):
-        guitar = Guitar(serialNumber, price, spec)
-        self.guitars.append(guitar)
+    def addInstrument(self, serialNumber, price, spec):
+        if isinstance(spec, GuitarSpec):
+            instrument = Guitar(serialNumber, price, spec)
+        elif isinstance(spec, MandolinSpec):
+            instrument = Mandolin(serialNumber, price, spec)
+        self.inventory.append(instrument)
 
-    def getGuitar(self, serialNumber):
-        for guitar in self.guitars:
-            if guitar.getSerialNumber() == serialNumber:
-                return guitar
+    def getInstrument(self, serialNumber):
+        for instrument in self.inventory:
+            if instrument.serialNumber == serialNumber:
+                return instrument
         return None
 
-    def searchGuitar(self, searchGuitar):
-        matchingGuitars = []
-        for guitar in self.guitars:
-            if guitar.spec.matches(searchGuitar):
-                matchingGuitars.append(guitar)
-        return matchingGuitars
+    def search(self, searchSpec):
+        if isinstance(searchSpec, GuitarSpec):
+            return [
+                guitar
+                for guitar in self.inventory
+                if isinstance(guitar, Guitar) and guitar.spec.matches(searchSpec)
+            ]
+        elif isinstance(searchSpec, MandolinSpec):
+            return [
+                mandolin
+                for mandolin in self.inventory
+                if isinstance(mandolin, Mandolin) and mandolin.spec.matches(searchSpec)
+            ]
+        return []
 
 
 def initializeInventory(inventory):
     spec1 = GuitarSpec(Builder.FENDER, "stratocaster", TypeG.ELECTRIC, Wood.ALDER, Wood.ALDER, 6)
-    inventory.addGuitar("V95693", 1499.95, spec1)
-    inventory.addGuitar("V99999", 1599.95, spec1)
+    inventory.addInstrument("V95693", 1499.95, spec1)
+    inventory.addInstrument("V99999", 1599.95, spec1)
+    spec2 = MandolinSpec(Builder.FENDER, "stratocaster", TypeG.ELECTRIC, Wood.ALDER, Wood.ALDER, Style.A)
+    inventory.addInstrument("M12345", 1000.00, spec2)
 
 
 def main():
     inventory = Inventory()
     initializeInventory(inventory)
 
-    lucas = GuitarSpec(Builder.FENDER, "Stratocaster", TypeG.ELECTRIC, Wood.ALDER, Wood.ALDER, 6)
-    matchingGuitars = inventory.searchGuitar(lucas)
-
+    whatErinLikes = GuitarSpec(Builder.FENDER, "stratocaster", TypeG.ELECTRIC, Wood.ALDER, Wood.ALDER, 6)
+    matchingGuitars = inventory.search(whatErinLikes)
     if matchingGuitars:
-        print("Lucas, talvez você goste destas: ")
+        print("Erin, talvez você goste destas:")
         for guitar in matchingGuitars:
             guitarSpec = guitar.spec
-            print(f"\nGuitarra: {guitar.getSerialNumber()} {guitarSpec.getBuilder().value} {guitarSpec.getModel()} {guitarSpec.getTypeG().value} guitar:")
-            print(f"{guitarSpec.getBackWood().value} na traseira e laterais,")
-            print(f"{guitarSpec.getTopWood().value} no tampo, com {guitarSpec.getNumStrings()} cordas")
-            print(f"Ela pode ser sua por apenas US${guitar.getPrice():.2f}!")
+            print(
+                "Guitarra:",
+                guitar.serialNumber,
+                guitarSpec.builder.value,
+                guitarSpec.model,
+                guitarSpec.typeg.value,
+                "guitar:",
+                guitarSpec.backWood.value,
+                "na traseira e laterais,",
+                guitarSpec.topWood.value,
+                "no tampo,",
+                guitarSpec.numStrings,
+                "cordas. Ela pode ser sua por apenas $",
+                guitar.price,
+                "!",
+            )
     else:
-        print("Desculpe Lucas, não temos nada para você.")
+        print("Desculpe Erin, não temos nada para você.")
+
+    whatBobLikes = MandolinSpec(Builder.FENDER, "stratocaster", TypeG.ELECTRIC, Wood.ALDER, Wood.ALDER, Style.A)
+    matchingMandolins = inventory.search(whatBobLikes)
+    if matchingMandolins:
+        print("Bob, talvez você goste destas:")
+        for mandolin in matchingMandolins:
+            mandolinSpec = mandolin.spec
+            print(
+                "Mandolin:",
+                mandolin.serialNumber,
+                mandolinSpec.builder.value,
+                mandolinSpec.model,
+                mandolinSpec.typeg.value,
+                "mandolin:",
+                mandolinSpec.backWood.value,
+                "na traseira e laterais,",
+                mandolinSpec.topWood.value,
+                "no tampo,",
+                mandolinSpec.style.value,
+                "estilo. Ela pode ser sua por apenas $",
+                mandolin.price,
+                "!",
+            )
+    else:
+        print("Desculpe Bob, não temos nada para você.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
